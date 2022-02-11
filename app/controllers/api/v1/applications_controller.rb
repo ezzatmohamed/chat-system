@@ -1,7 +1,6 @@
 module Api
   module V1
     class ApplicationsController < ApplicationController
-      require_relative '../../../../lib/repos/application_repo'
 
       def initialize()
         @application_repo = ApplicationRepo.new

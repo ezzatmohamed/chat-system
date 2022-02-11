@@ -1,7 +1,6 @@
 module Api
     module V1
         class ChatsController < ApplicationController
-            require_relative '../../../../lib/repos/chat_repo'
             before_action :initialize_repo
 
             def initialize_repo
