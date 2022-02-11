@@ -9,11 +9,7 @@ module Api
             end
 
             def index
-                # extracting paginatation params
-                per_page = params[:per_page] ? params[:per_page].to_i : 10
-                page = params[:page] ? params[:page].to_i : 1
-
-                chats = @chat_repo.fetchByPage(page, per_page)
+                chats = @chat_repo.fetchByPage(offset, limit)
                 render json: Multiple::ChatsResolver.new(chats).asJson
             end
             

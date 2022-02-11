@@ -23,14 +23,15 @@ class ChatRepo
         ).all
     end
 
-    def fetchByPage(page, per_page)
-        offset = ((page-1) * per_page) + 1
+    def fetchByPage(offset, limit)
         return Chat.joins(:application)
             .where(
                 :application => {
                     :token => @application_token
                 }
             )
+            .offset(offset)
+            .limit(limit)
     end
 
     def create()

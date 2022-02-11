@@ -8,9 +8,8 @@ class ApplicationRepo
         return Application.all
     end
 
-    def fetchByPage(page, per_page)
-        offset = ((page-1) * per_page) + 1
-        return Application.offset(offset).limit(per_page)
+    def fetchByPage(offset, limit)
+        return Application.offset(offset).limit(limit)
     end
 
     def create(data)

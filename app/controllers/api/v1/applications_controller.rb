@@ -8,9 +8,7 @@ module Api
 
       def index 
         # extracting paginatation params
-        per_page = params[:per_page] ? params[:per_page].to_i : 10
-        page = params[:page] ? params[:page].to_i : 1
-        applications = @application_repo.fetchByPage(page, per_page)
+        applications = @application_repo.fetchByPage(offset, limit)
         render json: Multiple::ApplicationsResolver.new(applications).asJson
       end
 
@@ -31,7 +29,6 @@ module Api
             render json: application.errors, status: :unproccessable_entity
           end
       end
-
 
       def update
         params.require(:name)
