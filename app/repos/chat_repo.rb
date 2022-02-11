@@ -39,4 +39,14 @@ class ChatRepo
             .order("number")
             .last
     end
+
+    def self.getChatByNumberAndAppToken(number, token)
+        return Chat.join(:application)
+            .find_by(
+                :application => {
+                    token: token
+                },
+                number: number
+            )
+    end
 end

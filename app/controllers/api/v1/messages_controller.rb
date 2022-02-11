@@ -4,8 +4,7 @@ module Api
             before_action :initialize_repo
 
             def initialize_repo
-                application = ApplicationRepo.new.findBy('token', params[:token])
-                chat = ChatRepo.new(application).findBy('number', params[:chat_number])
+                chat = ChatRepo.getChatByNumberAndAppToken(params[:chat_number], params[:token])
                 @message_repo = MessageRepo.new(chat)
             end
 
