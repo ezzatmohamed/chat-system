@@ -35,7 +35,7 @@ class ApplicationRepo
     end
 
 
-    protected
+    private
 
     def generate_token
         random_token = nil
