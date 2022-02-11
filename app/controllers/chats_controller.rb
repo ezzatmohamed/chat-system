@@ -17,7 +17,12 @@ class ChatsController < ApplicationController
     end
     
     def show 
-        render json: @chat_repo.findBy('number', params[:id]), except: [:id, :application_id]
+        chat = @chat_repo.findBy('number', params[:id])
+        if chat
+            render json: chat, except: [:id, :application_id]
+        else
+            render :nothing => true, :status => :not_found
+        end
     end
 
     def create
@@ -28,5 +33,4 @@ class ChatsController < ApplicationController
             render json: chat.errors, status: :unproccessable_entity
         end
     end
-end
 end

@@ -14,7 +14,13 @@ class ApplicationsController < ApplicationController
   end
 
   def show 
-    render json: @application_repo.findBy('token', params[:id]), except: [:id]
+    application = @application_repo.findBy('token', params[:id])
+
+    if application
+      render json: application , except: [:id]
+    else 
+      render :nothing =>true, :status => :not_found
+    end
   end
 
   def create
