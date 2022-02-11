@@ -5,7 +5,8 @@ module Api
 
             def initialize_repo
                 application_token = params[:token]
-                @chat_repo = ChatRepo.new(application_token)
+                application = ApplicationRepo.new.findBy('token', application_token)
+                @chat_repo = ChatRepo.new(application)
             end
 
             def index

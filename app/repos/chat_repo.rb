@@ -1,55 +1,41 @@
 class ChatRepo
-    require_relative 'application_repo'
-    
-    def initialize(application_token)
-        @application_token = application_token
+    def initialize(application)
+        @application = application
     end
 
     def findBy(column_name, value)
-        return Chat
-            .joins(:application)
-            .find_by(
-                :application => {
-                    :token => @application_token
-                },
+        return Chat.find_by(
+                application: @application,
                 column_name => value
             )
     end
 
     def fetchAll()
-        return Chat.joins(:application).where(
-            :application => {:token => @application_token},
+        return Chat.where(
+            application: @application,
             token: @application_token
         ).all
     end
 
     def fetchByPage(offset, limit)
-        return Chat.joins(:application)
-            .where(
-                :application => {
-                    :token => @application_token
-                }
-            )
+        return Chat.where(application: @application)
             .offset(offset)
             .limit(limit)
     end
 
     def create()
-        application_repo = ApplicationRepo.new
-        application = application_repo.findBy('token', @application_token)
-
-        latest_chat = getLatestChatForApp(application)
+        latest_chat = getLatestChatForApp()
         number =  latest_chat ? latest_chat.number + 1 : 1
 
         chat = Chat.new(
-            :application => application,
+            application: @application,
             :number => number
         )
         return chat.save, chat
     end
 
-    def getLatestChatForApp(application)
-        Chat.where(application: application)
+    def getLatestChatForApp()
+        Chat.where(application: @application)
             .order("number")
             .last
     end
