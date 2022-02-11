@@ -1,5 +1,6 @@
 class ChatRepo
-
+    require_relative 'application_repo'
+    
     def initialize(application_token)
         @application_token = application_token
     end
@@ -33,19 +34,22 @@ class ChatRepo
     end
 
     def create()
-        application = Application.find_by(:token => @application_token)
-        latest_chat = Chat.where(application_id: application.id)
-            .order("number")
-            .last
+        application_repo = ApplicationRepo.new
+        application = application_repo.findBy('token', @application_token)
 
+        latest_chat = getLatestChatForApp(application)
         number =  latest_chat ? latest_chat.number + 1 : 1
 
-        data = {
-            :application_id => application.id,
+        chat = Chat.new(
+            :application => application,
             :number => number
-        }
-
-        chat = Chat.new(data)
+        )
         return chat.save, chat
+    end
+
+    def getLatestChatForApp(application)
+        Chat.where(application: application)
+            .order("number")
+            .last
     end
 end
