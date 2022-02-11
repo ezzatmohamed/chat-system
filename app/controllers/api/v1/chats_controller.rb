@@ -15,13 +15,13 @@ module Api
                 page = params[:page] ? params[:page].to_i : 1
 
                 chats = @chat_repo.fetchByPage(page, per_page)
-                render json: chats, except: [:id, :application_id]
+                render json: ChatResolver.new(chats).asJson
             end
             
             def show 
                 chat = @chat_repo.findBy('number', params[:id])
                 if chat
-                    render json: resolve(chat)
+                    render json: ChatResolver.new(chat).asJson
                 else
                     render :nothing => true, :status => :not_found
                 end
@@ -30,21 +30,10 @@ module Api
             def create
                 is_saved, chat = @chat_repo.create()
                 if is_saved 
-                    render json: resolve(chat), status: :created
+                    render json: ChatResolver.new(chat).asJson, status: :created
                 else
                     render json: chat.errors, status: :unproccessable_entity
                 end
-            end
-
-            private 
-            
-            def resolve(chat)
-                {
-                    number: chat.number,
-                    messages_count: chat.messages_count,
-                    created_at: chat.created_at,
-                    updated_at: chat.updated_at
-                }
             end
         end
     end

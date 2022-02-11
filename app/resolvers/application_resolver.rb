@@ -4,7 +4,7 @@ class ApplicationResolver
     end
 
     def asJson
-        # Resolve if applications is an object
+        # Resolve if it's a single application
         if @applications.instance_of? Application
             resolveSingle(@applications)
         # Resolve if they're multiple applications
@@ -25,6 +25,4 @@ class ApplicationResolver
             chats_count: app.chats_count,
         }
     end
-
-    attr_reader :applications
 end
