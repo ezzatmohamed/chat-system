@@ -1,15 +1,12 @@
-class ApplicationResolver
-    def initialize(applications)
-        @applications = applications
-    end
+class ApplicationResolver < BaseResolver
 
     def asJson
         # Resolve if it's a single application
-        if @applications.instance_of? Application
-            resolveSingle(@applications)
+        if @resources.instance_of? Application
+            resolveSingle(@resources)
         # Resolve if they're multiple applications
         else
-            @applications.map do |app|
+            @resources.map do |app|
                 resolveSingle(app)
             end
         end

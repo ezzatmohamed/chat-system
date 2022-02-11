@@ -1,15 +1,12 @@
-class ChatResolver
-    def initialize(chats)
-        @chats = chats
-    end
+class ChatResolver < BaseResolver
 
     def asJson
         # Resolve if it's a single chat
-        if @chats.instance_of? Chat
-            resolveSingle(@chats)
+        if @resources.instance_of? Chat
+            resolveSingle(@resources)
         # Resolve if they're multiple chats
         else
-            @chats.map do |chat|
+            @resources.map do |chat|
                 resolveSingle(chat)
             end
         end
