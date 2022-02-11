@@ -22,7 +22,6 @@ class ApplicationRepo
     end
 
     def update(application_token ,data)
-        # generating random unique token
         application = self.findBy('token', application_token)
         if !application
             return false
