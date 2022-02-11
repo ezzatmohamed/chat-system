@@ -11,13 +11,13 @@ module Api
         per_page = params[:per_page] ? params[:per_page].to_i : 10
         page = params[:page] ? params[:page].to_i : 1
         applications = @application_repo.fetchByPage(page, per_page)
-        render json: ApplicationResolver.new(applications).asJson
+        render json: Multiple::ApplicationsResolver.new(applications).asJson
       end
 
       def show 
         application = @application_repo.findBy('token', params[:id])
         if application
-          render json: ApplicationResolver.new(application).asJson
+          render json: Single::ApplicationResolver.new(application).asJson
         else 
           render :nothing =>true, :status => :not_found
         end
@@ -26,7 +26,7 @@ module Api
       def create
           is_saved, application = @application_repo.create(application_params)
           if is_saved 
-            render json: ApplicationResolver.new(application).asJson, status: :created
+            render json: Single::ApplicationResolver.new(application).asJson, status: :created
           else
             render json: application.errors, status: :unproccessable_entity
           end
