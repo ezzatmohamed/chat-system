@@ -23,6 +23,10 @@ class ChatRepo
             .limit(limit)
     end
 
+    def getChatsCount
+        Chat.where(:application => @application).count
+    end
+    
     def create()
         latest_chat = getLatestChatForApp()
         number =  latest_chat ? latest_chat.number + 1 : 1
@@ -41,7 +45,7 @@ class ChatRepo
     end
 
     def self.getChatByNumberAndAppToken(number, token)
-        return Chat.join(:application)
+        return Chat.joins(:application)
             .find_by(
                 :application => {
                     token: token

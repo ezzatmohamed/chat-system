@@ -21,6 +21,10 @@ class MessageRepo
             .limit(limit)
     end
 
+    def getMessagesCount
+        Message.where(:chat => @chat).count
+    end
+
     def create(data)
         latest_message = getLatestMessageForChat()
         number =  latest_message ? latest_message.number + 1 : 1
