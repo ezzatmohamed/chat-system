@@ -12,14 +12,13 @@ module Api
         per_page = params[:per_page] ? params[:per_page].to_i : 10
         page = params[:page] ? params[:page].to_i : 1
         applications = @application_repo.fetchByPage(page, per_page)
-        render json: applications
+        render json: ApplicationResolver.new(applications).asJson
       end
 
       def show 
         application = @application_repo.findBy('token', params[:id])
-
         if application
-          render json: resolve(application)
+          render json: ApplicationResolver.new(application).asJson
         else 
           render :nothing =>true, :status => :not_found
         end
@@ -28,7 +27,7 @@ module Api
       def create
           is_saved, application = @application_repo.create(application_params)
           if is_saved 
-            render json: resolve(application), status: :created
+            render json: ApplicationResolver.new(application).asJson, status: :created
           else
             render json: application.errors, status: :unproccessable_entity
           end
@@ -51,16 +50,6 @@ module Api
 
       private 
         
-      def resolve(application)
-        {
-            name: application.name,
-            token: application.token,
-            chats_count: application.chats_count,
-            created_at: application.created_at,
-            updated_at: application.updated_at
-        }
-      end
-
       def application_params
         params.require(:application).permit(:name)
       end
