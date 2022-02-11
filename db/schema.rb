@@ -15,14 +15,14 @@ ActiveRecord::Schema.define(version: 2022_02_09_183950) do
   create_table "applications", charset: "utf8mb4", force: :cascade do |t|
     t.string "token"
     t.string "name"
-    t.integer "chats_count"
+    t.integer "chats_count", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "chats", charset: "utf8mb4", force: :cascade do |t|
     t.integer "number"
-    t.integer "messages_count"
+    t.integer "messages_count", default: 0
     t.bigint "application_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
