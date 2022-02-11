@@ -1,7 +1,4 @@
 class ApplicationRepo
-    def find(id)
-        return Application.find(id)
-    end
 
     def findBy(column_name, value)
         return Application.find_by( column_name => value)
@@ -23,6 +20,18 @@ class ApplicationRepo
             data.slice(:token, :name)
         )
         return application.save, application
+    end
+
+    def update(application_token ,data)
+        # generating random unique token
+        application = self.findBy('token', application_token)
+        if !application
+            return false
+        end
+        
+        return application.update(
+            data.slice(:name)
+        )
     end
 
 

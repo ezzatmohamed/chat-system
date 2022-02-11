@@ -29,4 +29,19 @@ class ApplicationsController < ApplicationController
       end
   end
 
+
+  def update
+    params.require(:name)
+    
+    application = @application_repo.update(
+      params[:id],
+      name: params[:name]
+    )
+    if application
+      render :nothing => true, :status => :ok
+    else
+      render :nothing => true, :status => :bad_request
+    end
+  end
+
 end
