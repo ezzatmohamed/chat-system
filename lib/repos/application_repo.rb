@@ -40,7 +40,7 @@ class ApplicationRepo
     def generate_token
         random_token = nil
         while random_token == nil || Application.exists?(token: random_token) 
-        random_token = SecureRandom.urlsafe_base64(100)
+        random_token = SecureRandom.uuid
         end
         return random_token
     end

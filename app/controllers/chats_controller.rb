@@ -19,7 +19,7 @@ class ChatsController < ApplicationController
     def show 
         chat = @chat_repo.findBy('number', params[:id])
         if chat
-            render json: chat, except: [:id, :application_id]
+            render json: resolve(chat)
         else
             render :nothing => true, :status => :not_found
         end
@@ -28,9 +28,20 @@ class ChatsController < ApplicationController
     def create
         is_saved, chat = @chat_repo.create()
         if is_saved 
-            render json: chat, except: [:id, :application_id]
+            render json: resolve(chat), status: :created
         else
             render json: chat.errors, status: :unproccessable_entity
         end
+    end
+
+    protected 
+    
+    def resolve(chat)
+        {
+            number: chat.number,
+            messages_count: chat.messages_count,
+            created_at: chat.created_at,
+            updated_at: chat.updated_at
+        }
     end
 end

@@ -17,7 +17,7 @@ class ApplicationsController < ApplicationController
     application = @application_repo.findBy('token', params[:id])
 
     if application
-      render json: application , except: [:id]
+      render json: resolve(application)
     else 
       render :nothing =>true, :status => :not_found
     end
@@ -29,7 +29,7 @@ class ApplicationsController < ApplicationController
         name: params[:name],
       )
       if is_saved 
-        render json: application, except: [:id]
+        render json: resolve(application), status: :created
       else
         render json: application.errors, status: :unproccessable_entity
       end
@@ -48,6 +48,18 @@ class ApplicationsController < ApplicationController
     else
       render :nothing => true, :status => :bad_request
     end
+  end
+
+  protected 
+    
+  def resolve(application)
+    {
+        name: application.name,
+        token: application.token,
+        chats_count: application.chats_count,
+        created_at: application.created_at,
+        updated_at: application.updated_at
+    }
   end
 
 end
