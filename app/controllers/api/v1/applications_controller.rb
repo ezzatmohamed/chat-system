@@ -7,7 +7,6 @@ module Api
       end
 
       def index 
-        # extracting paginatation params
         applications = @application_repo.fetchByPage(offset, limit)
         render json: Multiple::ApplicationsResolver.new(applications).asJson
       end
