@@ -35,6 +35,7 @@ class ChatRepo
             application: @application,
             :number => number
         )
+        UpdateChatsCountJob.perform_later(chat.application)
         return chat.save, chat
     end
 

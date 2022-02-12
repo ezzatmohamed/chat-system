@@ -24,7 +24,6 @@ module Api
 
             def create
                 is_saved, message = @message_repo.create(message_params)
-                UpdateMessagesCountJob.perform_later(message.chat)
                 if is_saved 
                     render json: Single::MessageResolver.new(message).asJson, status: :created
                 else

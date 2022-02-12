@@ -25,7 +25,6 @@ module Api
 
             def create
                 is_saved, chat = @chat_repo.create()
-                UpdateChatsCountJob.perform_later(chat.application)
                 if is_saved 
                     render json: Single::ChatResolver.new(chat).asJson, status: :created
                 else

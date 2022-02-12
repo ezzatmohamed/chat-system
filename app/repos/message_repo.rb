@@ -37,6 +37,8 @@ class MessageRepo
         message = Message.new(
             data.slice(:content, :chat, :number)
         )
+        # Job to update chat's messages count
+        UpdateMessagesCountJob.perform_later(message.chat)
         return message.save, message
     end
 
