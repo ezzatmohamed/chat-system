@@ -26,20 +26,19 @@ class MessageRepo
     end
 
     def create(data)
-        latest_message = getLatestMessageForChat()
-        number =  latest_message ? latest_message.number + 1 : 1
-
-        data = data.merge({
-            :chat => @chat,
-            :number => number
-        })
-        
+        data[:chat] = @chat
         message = Message.new(
-            data.slice(:content, :chat, :number)
+            data.slice(:content, :chat)
         )
-        # Job to update chat's messages count
-        UpdateMessagesCountJob.perform_later(message.chat)
-        return message.save, message
+        Message.transaction do
+            latest_message = getLatestMessageForChatWithLock()
+            number =  latest_message ? latest_message.number + 1 : 1
+            message.number = number
+            @is_saved = message.save!
+            # Job to update chat's messages count
+            UpdateMessagesCountJob.perform_later(message.chat)
+        end
+        return @is_saved, message
     end
 
     def update(message_number ,data)
@@ -58,8 +57,9 @@ class MessageRepo
             .records
     end
     
-    def getLatestMessageForChat()
-        Message.where(chat: @chat)
+    def getLatestMessageForChatWithLock()
+        Message.lock(true)
+            .where(chat: @chat)
             .order("number")
             .last
     end
