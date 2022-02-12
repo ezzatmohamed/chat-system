@@ -123,9 +123,6 @@ $ docker exec -it chat-system_web_1 rails db:migrate
     {
         "name":"app_name"
     }
-    ```
-
-    ```
 
 
 ## Message
@@ -158,9 +155,6 @@ $ docker exec -it chat-system_web_1 rails db:migrate
     {
         "content":"message_test"
     }
-    ```
-
-    ```
 
 ### /api/v1/applications/{app_token}/chats/{chat_number}/messages/{message_number}
 - Method
