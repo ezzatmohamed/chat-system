@@ -46,3 +46,6 @@ group :development do
   # gem "spring"
 end
 
+gem "elasticsearch-rails"
+gem "elasticsearch-model"
+gem "elasticsearch-persistence"

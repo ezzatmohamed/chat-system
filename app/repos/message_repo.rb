@@ -50,6 +50,12 @@ class MessageRepo
         )
     end
 
+    def search(query)
+        Message.where(chat: @chat)
+            .search(query)
+            .records
+    end
+    
     def getLatestMessageForChat()
         Message.where(chat: @chat)
             .order("number")

@@ -44,9 +44,8 @@ module Api
                 end
             end
 
-            # TODO: Elastic Search
             def search
-
+                render :json => @message_repo.search(search_params), :status => :ok
             end
 
 
@@ -54,6 +53,10 @@ module Api
                 
             def message_params
                 params.require(:message).permit(:content)
+            end
+
+            def search_params
+                params.require(:q)
             end
 
         end
