@@ -26,19 +26,20 @@ class MessageRepo
     end
 
     def create(data)
-        data[:chat] = @chat
-        message = Message.new(
-            data.slice(:content, :chat)
-        )
         Message.transaction do
             latest_message = getLatestMessageForChatWithLock()
-            number =  latest_message ? latest_message.number + 1 : 1
-            message.number = number
-            @is_saved = message.save!
+            @message = Message.new(
+                data.merge({
+                    :chat => @chat,
+                    number: latest_message ? latest_message.number + 1 : 1
+                })
+                .slice(:content, :chat, :number)
+            )
+            @is_saved = @message.save!
             # Job to update chat's messages count
-            UpdateMessagesCountJob.perform_later(message.chat)
+            UpdateMessagesCountJob.perform_later(@message.chat)
         end
-        return @is_saved, message
+        return @is_saved, @message
     end
 
     def update(message_number ,data)

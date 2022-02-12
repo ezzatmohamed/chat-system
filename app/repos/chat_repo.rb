@@ -28,19 +28,24 @@ class ChatRepo
     end
     
     def create()
-        latest_chat = getLatestChatForApp()
-        number =  latest_chat ? latest_chat.number + 1 : 1
 
-        chat = Chat.new(
-            application: @application,
-            :number => number
-        )
-        UpdateChatsCountJob.perform_later(chat.application)
-        return chat.save, chat
+        Chat.transaction do
+            latest_chat = getLatestChatForAppWithLock()
+            @chat = Chat.new(
+                application: @application,
+                number: latest_chat ? latest_chat.number + 1 : 1
+            )
+            @is_saved = @chat.save!
+            # Job to update app's messages count
+            UpdateChatsCountJob.perform_later(@chat.application)
+        end
+
+        return @is_saved, @chat
     end
 
-    def getLatestChatForApp()
-        Chat.where(application: @application)
+    def getLatestChatForAppWithLock()
+        Chat.lock(true)
+            .where(application: @application)
             .order("number")
             .last
     end
